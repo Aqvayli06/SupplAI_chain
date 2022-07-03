@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1609359838191.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "13627594",
+    "lastKnownWriteTime" : 1609369670,
+    "last_content_update" : 1609369670427,
+    "path" : "~/AzouaouBatteries/database_manager.R",
+    "project_path" : "database_manager.R",
+    "properties" : {
+        "cursorPosition" : "63,24",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

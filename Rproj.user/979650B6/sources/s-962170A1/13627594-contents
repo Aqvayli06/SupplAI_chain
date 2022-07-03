@@ -1,0 +1,64 @@
+# define some credentials
+credentials <- data.frame(
+  user = c("farid", "omar"), # mandatory
+  password = c("akka123", "12345"), # mandatory
+  start = c("2020-12-15","2020-12-15"), # optinal (all others)
+  expire = c(NA, "2021-12-31"),
+  admin = c(TRUE, FALSE),
+  comment = "Simple and secure authentification mechanism 
+  for single ‘Shiny’ applications.",
+  stringsAsFactors = FALSE
+)
+
+library("shiny")
+library("shinymanager")
+
+# you can use keyring package to set database key
+library(keyring)
+# key_set("R-shinymanager-key", "azouaoubatteries")
+
+# Init the database
+create_db(
+  credentials_data = credentials,
+  sqlite_path = "./db_azouaoubatteries.sqlite", # will be created
+  passphrase = key_get("R-shinymanager-key", "azouaoubatteries")
+  # passphrase = "passphrase_wihtout_keyring"
+)
+
+ nom <- "az_batteries"
+reference <- "0000"
+categorie <- "battery"
+quantity_disponible <- 10
+prix_achat <- 1000
+prix_vente <- 1200
+remise     <- 30
+garantie   <- 36
+poids      <- 2.5
+fournisseur <- "akkouche"
+
+az_articles <- data.frame(nom , reference, categorie , quantity_disponible, prix_achat , prix_vente , remise , garantie , poids,fournisseur)
+
+client_nom<- "farid"
+client_prenom <- "azouaou"
+client_tel <- "0049 176 61 10 90 08"
+client_entreprise <- "Daimler Mobility AG"
+
+az_clients <- data.frame(client_nom,client_prenom,client_tel,client_entreprise)
+
+az_con <- odbc::dbConnect(RSQLite::SQLite(), dbname = "./db_azouaoubatteries.sqlite")
+
+#
+#
+odbc::dbListTables(az_con)
+#
+odbc::dbWriteTable(az_con, "az_articles", az_articles,overw)
+
+odbc::dbWriteTable(az_con, "az_clients", az_clients)
+#
+
+odbc::dbDisconnect(az_con)
+
+
+res <- odbc::dbSendQuery(az_con, "SELECT * FROM az_articles WHERE nom = 'az_batteries' ")
+odbc::dbFetch(res)
+odbc::dbClearResult(res)

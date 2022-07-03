@@ -1,0 +1,9 @@
+{
+    "path" : "~/AzouaouBatteries",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

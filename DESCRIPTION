@@ -1,0 +1,34 @@
+Package: SupplAI
+Title: PKG_TITLE
+Version: 0.0.0.9000
+Authors@R: person('Farid', 'Azouaou', email = 'fairanalytics@outlook.com', role = c('cre', 'aut'))
+Description: PKG_DESC.
+License: MIT + file LICENSE
+Imports: 
+    config,
+    golem,
+    shiny,
+    processx,
+    attempt,
+    DT,
+    glue,
+    htmltools,
+    shinymanager,
+    keyring,
+    odbc,
+    magrittr,
+    dplyr,
+    shinyalert,
+    RSQLite,
+    bs4Dash,
+    rlang,
+    shinyWidgets,
+    tidyr,
+    waiter,
+    jsonlite,
+    janitor
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.0
+Suggests: 
+    testthat

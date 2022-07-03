@@ -1,0 +1,181 @@
+#' The application server-side
+#' 
+#' @param input,output,session Internal parameters for {shiny}. 
+#'     DO NOT REMOVE.
+#' @import shiny
+#' @noRd
+app_server <- function( input, output, session ) {
+  
+  
+  
+  
+  # List the first level callModules here
+  # check_credentials directly on sqlite db
+  res_auth <- shinymanager::secure_server(
+    check_credentials = shinymanager::check_credentials(
+      "./db_azouaoubatteries.sqlite",
+      passphrase = keyring::key_get("R-shinymanager-key", "azouaoubatteries")
+      # passphrase = "passphrase_wihtout_keyring"
+    )
+  )
+  
+  output$auth_output <- renderPrint({
+    reactiveValuesToList(res_auth)
+  })
+  
+  selected_articles_file <- "./data/selected_articles.rds"
+  saveRDS(NULL,selected_articles_file)
+  
+  
+  articles_disponibles <- reactive({
+    req(input$vente_article_nom)
+    az_con <- odbc::dbConnect(RSQLite::SQLite(), dbname = "./db_azouaoubatteries.sqlite")
+    query_req <-paste0("SELECT * FROM az_articles WHERE nom = '", input$vente_article_nom,"'")
+    res <- odbc::dbSendQuery(az_con, query_req)
+    batteries_dispo <- odbc::dbFetch(res)
+    odbc::dbClearResult(res)
+    return(batteries_dispo)
+  })
+  
+  output$articles_disponibles_DT <- renderDataTable({
+    req(articles_disponibles())
+    articles_disponibles()
+  })
+  
+  output$articles_a_vendres <- renderUI({
+    req(articles_disponibles())
+    articles_choices <- articles_disponibles()$nom
+    shinyWidgets::pickerInput(inputId = "articles_a_vendres",
+                              label = "Article a vendre",
+                              selected = NULL,
+                              choices = articles_choices,
+                              multiple = FALSE)
+  })
+  
+  output$quantity_a_vendres <- renderUI({
+    req(articles_disponibles())
+    quantity_disponible <- articles_disponibles()$quantity_disponible
+    quantity_disponible <- 0:quantity_disponible
+    shinyWidgets::pickerInput(inputId = "quantity_a_vendres",
+                              label = "Quantité",
+                              selected = NULL,
+                              choices = quantity_disponible,
+                              multiple = FALSE)
+  })
+  output$prix_vente_u <- renderUI({
+    req(articles_disponibles())
+    prix_vente_u <- articles_disponibles()$prix_vente
+    numericInput(inputId = "prix_vente_u",
+                              label = "Prix de Vente (U)",
+                              value = prix_vente_u)
+  })
+  
+  output$prix_vente_tot1 <- renderText({
+    # req(input$prix_vente_u)
+    # req(input$quantity_a_vendres)
+    tot_1 <- paste0(as.numeric(input$quantity_a_vendres) * as.numeric(input$prix_vente_u))
+    return(tot_1)
+  })
+  
+  output$valider_vente_article <- renderUI({
+    req(input$prix_vente_u)
+    req(input$quantity_a_vendres)
+    shinyWidgets::actionBttn(
+      inputId = "valider_vente_article",
+      label = "ajouter au panier"
+    )
+  })
+  
+  observeEvent(input$valider_vente_article,{
+    new_article <- data.frame(nom = input$articles_a_vendres, prix_unitaire = input$prix_vente_u, quantite = as.numeric(paste0(input$quantity_a_vendres)) )
+    
+    selected_articles <- readRDS(selected_articles_file)
+    
+    if(is.null(selected_articles)){
+      selected_articles <- new_article
+    }else{
+      selected_articles <- rbind(selected_articles,new_article)
+    }
+    saveRDS(selected_articles,selected_articles_file)
+  })
+  
+  selected_articles <- reactiveFileReader(intervalMillis = 1000,session = session ,filePath = selected_articles_file,readFunc = readRDS)
+
+  
+  
+  output$valider_vente_total <- renderUI({
+    req(selected_articles())
+    shinyWidgets::actionBttn(
+      inputId = "valider_vente_total",
+      label = "Finaliser"
+    )
+  })
+  
+  
+  observeEvent(input$valider_vente_total, {
+    updateTabsetPanel(session, "vente_tabset",
+                      selected = "client"
+    )
+  })
+  
+  
+  output$vente_client_nom <- renderUI({
+    req(selected_articles())
+    textInput(inputId = "vente_client_nom",label = "Nom du client",value = "")
+  })
+  output$vente_client_prenom <- renderUI({
+    req(selected_articles())
+    textInput(inputId = "vente_client_prenom",label = "Prenom du client",value = "")
+  })
+  output$vente_client_entreprise <- renderUI({
+    req(selected_articles())
+    textInput(inputId = "vente_client_entreprise",label = "Nom Entreprise",value = "")
+  })
+  output$vente_client_remise <- renderUI({
+    req(selected_articles())
+    numericInput(inputId = "vente_client_remise",
+                 label = "Remise (DZA)",
+                 value = 0)
+  })
+  
+  selected_articles_augmented <- reactive({
+    req(selected_articles())
+    req(input$vente_client_remise)
+    table_finale <- selected_articles()%>%dplyr::as.tbl()%>%
+      dplyr::mutate(somme = as.numeric(prix_unitaire) * quantite)
+    
+    total  <- data.frame(nom = "Somme Totale",prix_unitaire = NA, quantite = sum(table_finale$quantite), somme = sum(table_finale$somme))%>%dplyr::as.tbl()
+    
+    na_df <- remise <- data.frame(nom = NA,prix_unitaire = NA, quantite = NA, somme = NA)
+    
+    remise <- data.frame(nom = "Remise",prix_unitaire = NA, quantite = NA, somme = input$vente_client_remise)%>%dplyr::as.tbl()
+    
+    montant <- data.frame(nom = "Montant à regler",prix_unitaire = NA, quantite = NA, somme = total$somme - input$vente_client_remise)%>%dplyr::as.tbl()
+    
+    table_finale <- table_finale%>%dplyr::bind_rows(na_df)%>%
+      dplyr::bind_rows(total)%>%dplyr::bind_rows(na_df)%>%
+      dplyr::bind_rows(remise)%>%dplyr::bind_rows(na_df)%>%dplyr::bind_rows(montant)
+    return(table_finale)
+  })
+  output$selected_articles_DT<- renderDataTable({
+    selected_articles_augmented()
+  })
+  
+  output$vente_avec_facture <- renderUI({
+    req(selected_articles_augmented())
+    shinyWidgets::pickerInput(
+      inputId = "vente_avec_facture",
+      label = "Avec Facture", 
+      selected = "Non",
+      choices = c("Non","Oui")
+    )
+  }) 
+  
+  output$effectuer_vente <- renderUI({
+    req(selected_articles_augmented())
+    shinyWidgets::actionBttn(
+      inputId = "effectuer_vente",
+      label = "Effectuer  la Vente"
+    )
+  })
+}

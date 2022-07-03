@@ -1,0 +1,3 @@
+- create a json metadata file 
+
+- item_IDs and store_IDs should not have + in. 

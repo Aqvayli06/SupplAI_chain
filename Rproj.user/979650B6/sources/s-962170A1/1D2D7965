@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1609360194222.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "1D2D7965",
+    "lastKnownWriteTime" : 1609405268,
+    "last_content_update" : 1609405268485,
+    "path" : "~/AzouaouBatteries/R/app_server.R",
+    "project_path" : "R/app_server.R",
+    "properties" : {
+        "cursorPosition" : "168,0",
+        "scrollLine" : "162"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

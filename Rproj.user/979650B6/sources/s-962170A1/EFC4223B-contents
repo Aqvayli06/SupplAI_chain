@@ -1,0 +1,95 @@
+#' The application User-Interface
+#' 
+#' @param request Internal parameter for `{shiny}`. 
+#'     DO NOT REMOVE.
+#' @import shiny
+#' @noRd
+app_ui <- function(request) {
+  tagList(
+    # Leave this function for adding external resources
+    golem_add_external_resources(),
+    # List the first level UI elements here 
+    # fluidPage(
+    #   h1("AzouaouBatteries")
+    # )
+    shinydashboard::dashboardPage(
+      shinydashboard::dashboardHeader(title ="Omar Batteries"),
+      shinydashboard::dashboardSidebar(
+        shinydashboard::sidebarMenu(
+          shinydashboard::menuItem("Ventes", tabName = "batterie_vente", icon = icon("battery-full")),
+          shinydashboard::menuItem("Achats", tabName = "batterie_achat", icon = icon("battery-quarter"))
+          )# sidebar menu
+      ),
+      shinydashboard::dashboardBody(
+        
+        shinydashboard::tabItems(
+          shinydashboard::tabItem("batterie_vente",
+           tabsetPanel(id = "vente_tabset",
+             tabPanel("Articles/Commande",value = "articles",
+                      fluidRow(
+                        column(width = 3, textInput(inputId = "vente_article_nom",label = "Nom d'article",value = "")),
+                        column(width = 3, textInput(inputId = "vente_article_ref",label = "Reference",value = ""))
+                      ),
+                      dataTableOutput("articles_disponibles_DT"),
+                      fluidRow(
+                        col_3(uiOutput("articles_a_vendres")),
+                        col_3(uiOutput("quantity_a_vendres")),
+                        col_3(uiOutput("prix_vente_u")),
+                        col_3(uiOutput("valider_vente_article"))
+                      ),
+                      fluidRow(
+                        col_3(uiOutput("valider_vente_total"))
+                      )
+                      ),# articles panel
+             tabPanel("Client", value = "client", 
+                      fluidRow(
+                        col_3(uiOutput("vente_client_nom")),
+                        col_3(uiOutput("vente_client_prenom")),
+                        col_3(uiOutput("vente_client_entreprise")),
+                        col_3(uiOutput("vente_client_remise"))
+                      ),
+                      dataTableOutput("selected_articles_DT"),
+                      fluidRow(
+                        col_3(uiOutput("vente_avec_facture")),
+                        col_3(uiOutput("effectuer_vente"))
+                      )
+                      ),#panel client
+             tabPanel("Factures",value = "facture" ,tableOutput("table"))
+           )
+          ),#batterie_vente
+          shinydashboard::tabItem("batterie_achat",
+                                  
+          )#batterie_achat
+          
+        )# menu items
+        
+      )
+    )
+  )
+}
+
+#' Add external Resources to the Application
+#' 
+#' This function is internally used to add external 
+#' resources inside the Shiny application. 
+#' 
+#' @import shiny
+#' @importFrom golem add_resource_path activate_js favicon bundle_resources
+#' @noRd
+golem_add_external_resources <- function(){
+  
+  add_resource_path(
+    'www', app_sys('app/www')
+  )
+ 
+  tags$head(
+    favicon(),
+    bundle_resources(
+      path = app_sys('app/www'),
+      app_title = 'AzouaouBatteries'
+    )
+    # Add here other external resources
+    # for example, you can add shinyalert::useShinyalert() 
+  )
+}
+

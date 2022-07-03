@@ -1,0 +1,8 @@
+.Rhistory
+.RData
+.Rproj.user
+man
+\inst\db_warehouse_mgmt.sqlite
+temp
+mongoDB connector.R
+to_do.txt
