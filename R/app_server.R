@@ -1,3 +1,4 @@
+
 #' The application server-side
 #' 
 #' @param input,output,session Internal parameters for {shiny}. 
@@ -13,7 +14,7 @@ app_server <- function( input, output, session ) {
   # check_credentials directly on sqlite db
   res_auth <- shinymanager::secure_server(
     check_credentials = shinymanager::check_credentials(
-      db_name,
+      db = initiate_cred_db(),
       passphrase = keyring::key_get("R-keyring-test-service", "donaldduck")
       # passphrase = "passphrase_wihtout_keyring"
     )

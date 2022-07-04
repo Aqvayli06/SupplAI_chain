@@ -20,6 +20,9 @@ key_set("R-keyring-test-service", "donaldduck")
 # keyring::key_set_with_value("R-keyring-test-service", "donaldduck",keyring = "farid")
 
 db_name <- "./inst/db_warehouse_mgmt.sqlite"
+if(!file.exists(db_name)){
+  file.copy(from = system.file("db_warehouse_mgmt.sqlite", package = "SupplAI"),to = db_name,recursive = TRUE)    
+}
 # Init the database
 create_db(
   credentials_data = credentials,

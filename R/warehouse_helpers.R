@@ -2,6 +2,8 @@
 #' @description t.b.d
 #' @export
 open_warehouse_db <- function(db_name = "./inst/db_warehouse_mgmt.sqlite"){
+  db_name <- system.file("db_warehouse_mgmt.sqlite", package = "SupplAI")  
+  
   odbc::dbConnect(RSQLite::SQLite(), dbname = db_name)
 }
 

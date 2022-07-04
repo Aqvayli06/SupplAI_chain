@@ -23,8 +23,8 @@ update_replenishment_params_table <- function(db_con = NULL , target_item_ID = N
 }
 
 #' load_replenishemnt_parameters
-#' @param 
-#' @param 
+#' @param db_con database connection
+#' @param item_ID item identifier
 #' @export
 
 load_replenishemnt_parameters <- function(db_con = NULL,item_ID = NULL, store_ID = NULL,sc_meta_data = NULL){

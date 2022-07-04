@@ -4,6 +4,11 @@
 #' @export
 
 load_db_metadata <- function(sc_project_metadata_file = "./inst/sc_project_metadata.json"){
+   if(!file.exists(sc_project_metadata_file)){
+     dir.create("inst")
+     file.copy(from = system.file("sc_project_metadata.json", package = "SupplAI"),to = sc_project_metadata_file,recursive = TRUE,overwrite = TRUE)    
+   }
+  
    sc_project_metadata <- jsonlite::fromJSON(sc_project_metadata_file)%>%
      jsonlite::parse_json(simplifyVector  = TRUE)
    return(sc_project_metadata)

@@ -72,3 +72,15 @@ capwords <- function(s, strict = FALSE) {
                            sep = "", collapse = " " )
   sapply(strsplit(s, split = " "), cap, USE.NAMES = !is.null(names(s)))
 }
+
+#' initiate_cred_db
+#' @param db_path databse location
+#' @param db_configs parameters to be used to access the database
+#' @export
+
+initiate_cred_db <- function(db_path = "./inst/db_warehouse_mgmt.sqlite"){
+  if(!file.exists(db_name)){
+    file.copy(from = system.file("db_warehouse_mgmt.sqlite", package = "SupplAI"),to = db_name,recursive = TRUE)    
+  }
+  return(db_name)
+}
