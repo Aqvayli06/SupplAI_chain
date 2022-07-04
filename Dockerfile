@@ -1,13 +1,18 @@
 FROM 060159139582.dkr.ecr.eu-west-3.amazonaws.com/docker_supplai_base:supplai_base_image
 
+
 # install home made packages
-RUN Rscript -e 'remotes::install_github("Aqvayli06/SaldaeForecasting")'
+RUN Rscript -e 'remotes::install_github("Aqvayli06/SaldaeForecasting", dependencies = FALSE)'
 
 #   copy the remaining elements and set wordking directory
+
 RUN mkdir /build_zone
 ADD . /build_zone
 WORKDIR /build_zone
-RUN R -e 'remotes::install_local(upgrade="never")'
+
+# install the package that contains the App
+RUN R -e 'remotes::install_local(upgrade="never", dependencies = FALSE)'
+
 RUN rm -rf /build_zone
 
 # expose to a specific PORT
