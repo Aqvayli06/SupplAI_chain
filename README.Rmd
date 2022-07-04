@@ -5,5 +5,9 @@
 
 ### Installation and usage
 
+install.packages("remotes", dependencies = TRUE)
+remotes::install_github("Aqvayli06/SaldaeForecasting", dependencies = TRUE)
+remotes::install_github("Aqvayli06/SupplAI_chain", dependencies = TRUE)
+
 t.b.d
  * 
