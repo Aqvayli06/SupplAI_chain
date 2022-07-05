@@ -80,6 +80,7 @@ capwords <- function(s, strict = FALSE) {
 
 initiate_cred_db <- function(db_path = "./inst/db_warehouse_mgmt.sqlite"){
   if(!file.exists(db_name)){
+    dir.create("inst")
     file.copy(from = system.file("db_warehouse_mgmt.sqlite", package = "SupplAI"),to = db_name,recursive = TRUE)    
   }
   return(db_name)
