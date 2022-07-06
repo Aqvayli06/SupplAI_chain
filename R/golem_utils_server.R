@@ -78,7 +78,7 @@ capwords <- function(s, strict = FALSE) {
 #' @param db_configs parameters to be used to access the database
 #' @export
 
-initiate_cred_db <- function(db_path = "./inst/db_warehouse_mgmt.sqlite"){
+initiate_cred_db <- function(db_name = "./inst/db_warehouse_mgmt.sqlite"){
   if(!file.exists(db_name)){
     dir.create("inst")
     file.copy(from = system.file("db_warehouse_mgmt.sqlite", package = "SupplAI"),to = db_name,recursive = TRUE)    
