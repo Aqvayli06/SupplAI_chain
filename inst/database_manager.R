@@ -16,7 +16,7 @@ library("dplyr")
 # you can use keyring package to set database key
 library("keyring")
 
-key_set("R-keyring-test-service", "donaldduck")
+keyring::key_set("R-keyring-test-service", "donaldduck")
 # keyring::key_set_with_value("R-keyring-test-service", "donaldduck",keyring = "farid")
 
 db_name <- "./inst/db_warehouse_mgmt.sqlite"
