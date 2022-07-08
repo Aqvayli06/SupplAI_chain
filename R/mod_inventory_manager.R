@@ -39,12 +39,12 @@ mod_inventory_manager_server <- function(id){
     available_item_stores <- reactive({
       load_sales_forecasts(db_con = db_con, target_attribute = paste(item_ID_field,store_ID_field,sep = ","))%>%unique()
     })
+    
     output$target_item_ID <- renderUI({
       req(available_item_stores())
       item_ID_choices <- available_item_stores()%>%dplyr::pull(!!item_ID_field)%>%unique()
       selectInput(inputId = ns("target_item_ID"),label = item_ID_field, choices = item_ID_choices, multiple = FALSE)
     })
-    
     
     output$target_store_ID <- renderUI({
       req(available_item_stores())
@@ -110,6 +110,7 @@ mod_inventory_manager_server <- function(id){
         color = "warning",
         width = 4)
     })
+    
     output$params_projected_horizon <- bs4Dash::renderInfoBox({
       bs4Dash::infoBox(
         title = "Projection Horizon",
@@ -123,7 +124,7 @@ mod_inventory_manager_server <- function(id){
     output$params_lead_time <- bs4Dash::renderInfoBox({
       bs4Dash::infoBox(
         title = "Lead Time(days)",
-        value = 14,
+        value = replenishment_strategy_parameters()$lead_time,
         subtitle = NULL,
         icon = shiny::icon("fa-solid fa-hourglass-start"),
         color = "navy",
@@ -136,6 +137,7 @@ mod_inventory_manager_server <- function(id){
                    uiOutput(ns("params_supply_freq")),
                    uiOutput(ns("params_projected_horizon")),
                    uiOutput(ns("params_lead_time"))
+                   
       )
     })# box : strategy_params_box
     

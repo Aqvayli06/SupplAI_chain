@@ -8,7 +8,7 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
-
+    waiter::autoWaiter(html = waiter::spin_three_bounce()),
     bs4Dash::dashboardPage(
       # preloader = list(html = tagList(waiter::spin_circle_square(), "Loading ..."), color = "darkcyan"),
       bs4Dash::dashboardHeader(title ="SupplyChainAnalytics"),

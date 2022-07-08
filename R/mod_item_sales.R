@@ -30,7 +30,6 @@ mod_sale_manager_ui <- function(id){
 mod_sale_manager_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    
     dir.create("./temp/")
     selected_articles_file <- "./temp/selected_articles_for_order.rds"
     saveRDS(NULL,selected_articles_file)

@@ -47,20 +47,44 @@ mod_replenishment_strategy_server <- function(id){
       selectInput(inputId = ns("target_store_ID"),label = store_ID_field, choices = store_ID_choices)
     })
     
+    replenishment_strategy_parameters <- reactive({
+      req(input$target_item_ID)
+      req(input$target_store_ID)
+      temp_params <- load_replenishemnt_parameters(db_con = db_con , item_ID = input$target_item_ID,
+                                    store_ID = input$target_store_ID, sc_meta_data = sc_meta_data)
+      if(nrow(temp_params)==0){
+        temp_params <- data.frame(safety_stock =  3, forecast_horizon = 15, supply_frequency = 4)
+      }
+      return(temp_params)
+    }) # replenishment_strategy_parameters
+    
+    
     output$forecast_horizon <- renderUI({
       req(available_item_stores())
-      forecast_horizon <- 4:90
-      selectInput(inputId = ns("forecast_horizon"), label = "Forecast Horizon", choices = forecast_horizon)
+      forecast_horizons <- 4:90
+      selectInput(inputId = ns("forecast_horizon"), 
+                  label = "Forecast Horizon", choices = forecast_horizons,
+                  selected = replenishment_strategy_parameters()$forecast_horizon)
     })
     output$safety_stock <- renderUI({
       req(available_item_stores())
-      safety_stock <- 1:90
-      selectInput(inputId = ns("safety_stock"), label = "Safety Stock", choices = safety_stock)
+      safety_stocks <- 1:90
+      selectInput(inputId = ns("safety_stock"), label = "Safety Stock",choices = safety_stocks,
+                  selected = replenishment_strategy_parameters()$safety_stock)
     })
+    
     output$supply_frequency <- renderUI({
       req(available_item_stores())
-      supply_frequency <- 1:10
-      selectInput(inputId = ns("supply_frequency"), label = "Supply Frequency", choices = supply_frequency)
+      supply_frequencies <- 1:10
+      selectInput(inputId = ns("supply_frequency"), label = "Supply Frequency",choices = supply_frequencies,
+                  selected = replenishment_strategy_parameters()$supply_frequency)
+    })
+    
+    output$lead_time <- renderUI({
+      req(available_item_stores())
+      lead_times <- 1:10
+      selectInput(inputId = ns("lead_time"), label = "Lead Time",choices = lead_times,
+                  selected = replenishment_strategy_parameters()$lead_time)
     })
     
     output$update_replenishment_params <- renderUI({
@@ -84,6 +108,7 @@ mod_replenishment_strategy_server <- function(id){
                      col_2(uiOutput(ns("forecast_horizon"))),
                      col_2(uiOutput(ns("safety_stock"))),
                      col_2(uiOutput(ns("supply_frequency"))),
+                     col_2(uiOutput(ns("lead_time"))),
                      col_2(uiOutput(ns("update_replenishment_params")))
                    )
       )# replenishment_strategy_box

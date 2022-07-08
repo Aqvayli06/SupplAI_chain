@@ -149,7 +149,7 @@ mod_sales_forecaster_server <- function(id){
       
       sales_forecasts()%>%
         prepare_forecast_for_db_upload(variables_to_drop = c("actuals","corrected"), sc_meta_data= sc_meta_data)%>%
-        upload_to_database(input_data = ., target_table = "sales_forecast_table", meta_data = sales_meta, meta_data_file = "./inst/sc_project_metadata.json")
+        upload_to_database(input_data = .,upload_mode = "append", target_table = "sales_forecast_table", meta_data = sales_meta, meta_data_file = "./inst/sc_project_metadata.json")
       shinyalert::shinyalert(title = "Sales Forecast", text = "Successfully Uploaded", type = "success")
     })
     

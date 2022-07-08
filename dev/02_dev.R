@@ -30,12 +30,16 @@ usethis::use_package( "processx" )
 usethis::use_package( "jsonlite" )
 usethis::use_package( "janitor" )
 usethis::use_package( "DT" )
+# core packages
+usethis::use_package( "SaldaeForecasting" )
+usethis::use_package( "SaldaeDataExplorer" )
+
 
 
 
 ## Add modules ----
 ## Create a module infrastructure in R/
-golem::add_module( name = "replenishment_simulation" ) # Name of the module
+golem::add_module( name = "refresh_results" ) # Name of the module
 golem::add_module( name = "name_of_module2" ) # Name of the module
 
 ## Add helper functions ----

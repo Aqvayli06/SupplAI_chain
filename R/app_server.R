@@ -7,8 +7,7 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   
-  
-  
+
   db_name <- "./inst/db_warehouse_mgmt.sqlite"
   # List the first level callModules here
   # check_credentials directly on sqlite db
