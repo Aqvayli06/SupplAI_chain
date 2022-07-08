@@ -10,7 +10,7 @@ RUN Rscript -e 'remotes::install_github("Aqvayli06/SaldaeDataExplorer", dependen
 
 # install the package that contains the App
 RUN R -e 'remotes::install_github("Aqvayli06/SupplAI_chain", dependencies = TRUE, upgrade = "never")'
-RUN R -e 'library(SupplAI)'
+
 #   copy the remaining elements and set wordking directory
 RUN mkdir /build_zone
 ADD . /build_zone
