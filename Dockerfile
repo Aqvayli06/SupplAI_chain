@@ -2,6 +2,9 @@ FROM 060159139582.dkr.ecr.eu-west-3.amazonaws.com/docker_supplai_base:supplai_ba
 
 # install home made packages
 RUN Rscript -e 'remotes::install_github("Aqvayli06/SaldaeForecasting", dependencies = FALSE)'
+
+RUN Rscript -e 'remotes::install_github("Aqvayli06/SaldaeDataExplorer", dependencies = TRUE,upgrade="never")'
+
 # install the package that contains the App
 RUN R -e 'remotes::install_github("Aqvayli06/SupplAI_chain", dependencies = TRUE, upgrade = "never")'
 RUN R -e 'library(SupplAI)'
