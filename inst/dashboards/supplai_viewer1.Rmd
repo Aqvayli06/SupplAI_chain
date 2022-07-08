@@ -8,7 +8,6 @@ output:
 ---
 
 ```{r setup, include=FALSE,warning=FALSE,message=FALSE}
-library(SupplAI)
 db_con <- open_warehouse_db()
 sc_meta_data <- load_db_metadata()
 target_value_vars <- "sales"
