@@ -3,6 +3,7 @@
 #' @param grad_col_var variables to 
 #' @param col_to_hide columns to hide
 #' @param new_col_names new column names
+#' @export
 
 display_dt_table_DT <- function(data_table = NULL, grad_col_var = NULL,new_col_names = NULL){
   DT_data_table <- data_table%>%

@@ -30,11 +30,11 @@ usethis::use_package( "processx" )
 usethis::use_package( "jsonlite" )
 usethis::use_package( "janitor" )
 usethis::use_package( "DT" )
+usethis::use_package( "rmarkdown" )
 # core packages
 usethis::use_package( "SaldaeForecasting" )
 usethis::use_package( "SaldaeDataExplorer" )
-
-
+usethis::use_package( "flexdashboard" )
 
 
 ## Add modules ----

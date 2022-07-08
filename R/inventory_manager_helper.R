@@ -86,6 +86,7 @@ calculate_projected_inventory <- function(demand_forecast = NULL,safety_stock = 
 #' @param frozen_period  a period where no replenishment is possible
 #' @param safety_stock a period of time for which current stock should serve before going to shortage
 #' @param supply_freq frequency of Supply
+#' @export
 
 calculate_projected_inventory_main <- function( demand_forecast = NULL, stock_level = NULL, frozen_period = NULL,upcoming_orders = NULL,safety_stock = 2, supply_freq = 3, projection_horizon = 12){
   supply_freq <- as.numeric(supply_freq)

@@ -1,0 +1,70 @@
+---
+title: "SupplAI: Viewer Dashboard"
+author: "Farid Azouaou"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    social: menu
+---
+
+```{r setup, include=FALSE,warning=FALSE,message=FALSE}
+library(SupplAI)
+db_con <- open_warehouse_db()
+sc_meta_data <- load_db_metadata()
+target_value_vars <- "sales"
+date_var    <- "date"
+target_item_ID <- "BREAD/BAKERY"
+target_store_ID <- 3
+
+```
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### Demand Forecast
+
+```{r}
+demand_forecast <- load_sales_forecasts(db_con = db_con, item_IDs = target_item_ID, 
+                           store_IDs = target_store_ID,as_of_date = NULL,sc_meta_data = sc_meta_data, date_freq = NULL, fcast_horizon =  20)
+
+demand_forecast%>%dplyr::group_by(as_of_date,date)%>%
+        dplyr::summarise_at(c("forecast",  "upper",   "lower"),sum)%>%
+        generate_sales_forecast_chart(target_variable = "Demand(u)")
+```
+
+### Projected Inventory
+
+```{r}
+pv_params <- load_replenishemnt_parameters(db_con = db_con , item_ID = target_item_ID,
+                                    store_ID = target_store_ID, sc_meta_data = sc_meta_data)
+
+projected_inventory <- demand_forecast%>%
+        calculate_projected_inventory_main(
+          safety_stock = pv_params$safety_stock, 
+          supply_freq = pv_params$supply_freq,
+          projection_horizon = pv_params$forecast_horizon)
+projected_inventory_chart <- projected_inventory%>%
+  generate_projected_inventory_chart()
+
+projected_inventory_chart
+
+```
+
+Column {.tabset data-width=400}
+-----------------------------------------------------------------------
+
+### Sales by Category
+
+```{r, fig.keep='none'}
+
+grad_col_var <- c("demand_fcast","drp_amount","projected_inventory")
+names(grad_col_var) <- c("#1B9E77","#D95F02","#E6AB02")
+projected_inventory%>%
+        display_dt_table_DT(grad_col_var = grad_col_var)
+```
+
+### Best Sellers
+
+```{r}
+
+```
