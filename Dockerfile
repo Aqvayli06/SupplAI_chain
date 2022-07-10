@@ -22,6 +22,9 @@ WORKDIR /build_zone
 
 RUN rm -rf /build_zone
 
+# enable write in docker container
+RUN chmod 777
+
 # set host and port
 COPY Rprofile.site /usr/local/lib/R/etc/
 
