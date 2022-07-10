@@ -26,7 +26,9 @@ load_sales_forecasts <- function(db_con = NULL,target_attribute = "*", item_IDs 
   return(sales_forecasts)
 }
 
-
+#' generate_sales_forecast_chart
+#' @param fcast_df forecast dataframe input
+#' @export
 generate_sales_forecast_chart <- function (fcast_df = NULL,
                                            plot_settings = NULL, target_variable = "Sales Forecast"){
   if (is.null(plot_settings)) {
