@@ -3,7 +3,6 @@ FROM 060159139582.dkr.ecr.eu-west-3.amazonaws.com/docker_supplai_base:supplai_ba
 ENV MONGODB_API_KEY = $MONGODB_API_KEY1
 # install home made packages
 
-#RUN Rscript -e 'remotes::install_cran("anomalize",dependencies = TRUE)'
 
 RUN Rscript -e 'remotes::install_github("Aqvayli06/SaldaeForecasting", dependencies = FALSE)'
 
