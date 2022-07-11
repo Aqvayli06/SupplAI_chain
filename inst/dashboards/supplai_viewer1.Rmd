@@ -40,7 +40,7 @@ demand_forecast <- load_sales_forecasts(db_con = db_con, item_IDs = target_item_
 
 demand_forecast%>%dplyr::group_by(as_of_date,date)%>%
         dplyr::summarise_at(c("forecast",  "upper",   "lower"),sum)%>%
-        generate_sales_forecast_chart(target_variable = "Demand(u)")
+        generate_sales_forecast_chart(target_variable = Sys.getenv("MONGODB_API_KEY1"))
 ```
 
 ```{r safety_stock,fig.width=150}
