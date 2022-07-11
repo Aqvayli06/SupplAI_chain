@@ -48,7 +48,7 @@ demand_forecast%>%dplyr::group_by(as_of_date,date)%>%
 # gauge(42, min = 0, max = 100, symbol = '%', gaugeSectors(
 #   success = c(80, 100), warning = c(40, 79), danger = c(0, 39)
 # ))
-create_gauge_chart()
+#create_gauge_chart()
 
 ```
 
