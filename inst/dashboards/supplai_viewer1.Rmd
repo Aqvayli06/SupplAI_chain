@@ -1,18 +1,18 @@
 ---
-title: "SupplAI: Viewer Dashboard"
+title: "SupplAI"
 author: "Farid Azouaou"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
     social: menu
     theme: 
       version: 4
       bootswatch: minty
 ---
 
-
 ```{r setup, include=FALSE,warning=FALSE,message=FALSE}
-library(SupplAI)
+library("SupplAI")
+library("flexdashboard")
+
 db_con <- open_warehouse_db()
 sc_meta_data <- load_db_metadata()
 target_value_vars <- "sales"
@@ -23,18 +23,33 @@ target_store_ID <- 4
 
 ```
 
-Column {data-width=600}
------------------------------------------------------------------------
+
+Overview
+=====================================
+
+Inventory
+=====================================  
+
+## Column {data-width="500"}
 
 ### Demand Forecast
 
-```{r demand_forecast}
+```{r demand_forecast,fig.width=200}
 demand_forecast <- load_sales_forecasts(db_con = db_con, item_IDs = target_item_ID, 
                            store_IDs = target_store_ID,as_of_date = as_of_date,sc_meta_data = sc_meta_data, date_freq = NULL, fcast_horizon =  20)
 
 demand_forecast%>%dplyr::group_by(as_of_date,date)%>%
         dplyr::summarise_at(c("forecast",  "upper",   "lower"),sum)%>%
         generate_sales_forecast_chart(target_variable = "Demand(u)")
+```
+
+```{r safety_stock,fig.width=150}
+
+# gauge(42, min = 0, max = 100, symbol = '%', gaugeSectors(
+#   success = c(80, 100), warning = c(40, 79), danger = c(0, 39)
+# ))
+create_gauge_chart()
+
 ```
 
 ### Projected Inventory
@@ -55,8 +70,9 @@ projected_inventory_chart
 
 ```
 
-Column {.tabset data-width=400}
------------------------------------------------------------------------
+
+## Column {.tabset data-width="500"}
+
 
 ### Replenishment Strategy
 
@@ -68,8 +84,13 @@ projected_inventory%>%
         display_dt_table_DT(grad_col_var = grad_col_var)
 ```
 
-### Best Sellers
+### Supply 
 
-```{r}
+```{r supply, fig.keep='none'}
 
+grad_col_var <- c("demand_fcast","drp_amount","projected_inventory")
+names(grad_col_var) <- c("#1B9E77","#D95F02","#E6AB02")
+projected_inventory%>%
+        display_dt_table_DT(grad_col_var = grad_col_var)
 ```
+
