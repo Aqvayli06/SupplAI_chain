@@ -5,9 +5,9 @@ ENV MONGODB_API_KEY = $MONGODB_API_KEY1
 
 #RUN Rscript -e 'remotes::install_cran("anomalize",dependencies = TRUE)'
 
-#RUN Rscript -e 'remotes::install_github("Aqvayli06/SaldaeForecasting", dependencies = FALSE)'
+RUN Rscript -e 'remotes::install_github("Aqvayli06/SaldaeForecasting", dependencies = FALSE)'
 
-RUN Rscript -e 'remotes::install_github("Aqvayli06/SaldaeDataExplorer", dependencies = FALSE)'
+#RUN Rscript -e 'remotes::install_github("Aqvayli06/SaldaeDataExplorer", dependencies = FALSE)'
 
 # install the package that contains the App
 RUN Rscript -e 'remotes::install_github("Aqvayli06/SupplAI_chain", dependencies = TRUE, upgrade = "never")'
