@@ -39,5 +39,5 @@ jobs:
         MONGODB_API_KEY1: ${{secrets.MONGODB_API_KEY}}
         IMAGE_TAG: supplai_image13
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg FARID = $MONGODB_API_KEY1 .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg FARID="$MONGODB_API_KEY1" -f Dockerfile .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
