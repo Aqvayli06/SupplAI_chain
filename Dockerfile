@@ -1,5 +1,7 @@
 FROM 060159139582.dkr.ecr.eu-west-3.amazonaws.com/docker_supplai_base:supplai_base_image
 
+ARG MONGODB_API_KEY1
+
 ENV ENV_MONGODB_API_KEY1 = $MONGODB_API_KEY1
 # install home made packages
 
