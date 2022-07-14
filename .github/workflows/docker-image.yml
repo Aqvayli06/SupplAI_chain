@@ -36,8 +36,8 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: docker_supplai
-        MONGODB_API_KEY1: ${{ secrets.MONGODB_API_KEY}}
+        #MONGODB_API_KEY1: ${{ secrets.MONGODB_API_KEY}}
         IMAGE_TAG: supplai_image14
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg $MONGODB_API_KEY1 . 
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg MONGODB_API_KEY1 = ${{ secrets.MONGODB_API_KEY}} . 
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
