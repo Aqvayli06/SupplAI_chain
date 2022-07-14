@@ -3,7 +3,7 @@ FROM 060159139582.dkr.ecr.eu-west-3.amazonaws.com/docker_supplai_base:supplai_ba
 ENV MONGODB_API_KEY1 = $MONGODB_API_KEY1
 # install home made packages
 
-RUN Rscript -e 'print(paste("ENV VAR ist" ,Sys.getenv("MONGODB_API_KEY1"))'
+RUN Rscript -e 'print(paste("ENV VAR ist" ,Sys.getenv("MONGODB_API_KEY1")))'
 
 RUN Rscript -e 'remotes::install_github("Aqvayli06/SaldaeForecasting", dependencies = FALSE)'
 
