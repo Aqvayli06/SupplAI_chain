@@ -35,12 +35,13 @@ Inventory
 ### Demand Forecast
 
 ```{r demand_forecast,fig.width=200}
-demand_forecast <- load_sales_forecasts(db_con = db_con, item_IDs = target_item_ID, 
-                           store_IDs = target_store_ID,as_of_date = as_of_date,sc_meta_data = sc_meta_data, date_freq = NULL, fcast_horizon =  20)
+demand_forecast <- load_sales_forecasts(db_con = db_con, item_IDs = "AUTOMOTIVE", 
+                           store_IDs = target_store_ID,as_of_date = "19174",
+                           sc_meta_data = sc_meta_data, date_freq = NULL, fcast_horizon =  20)
 
 demand_forecast%>%dplyr::group_by(as_of_date,date)%>%
         dplyr::summarise_at(c("forecast",  "upper",   "lower"),sum)%>%
-        generate_sales_forecast_chart(target_variable = Sys.getenv("ENV_MONGODB_API_KEY1"))
+        generate_sales_forecast_chart(target_variable = "Demand forecast(u)")
 ```
 
 ```{r safety_stock,fig.width=150}

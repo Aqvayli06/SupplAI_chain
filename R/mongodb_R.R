@@ -1,4 +1,3 @@
-
 # Connect to demo server
 
 open_mogo_db_connection <- function(){

@@ -1,12 +1,8 @@
-#' load_sales_forecasts
-#' @param db_con a database connection
-#' @param item_IDs articles to load
-#' @param store_IDs store IDs
+#' import_data_from_sql
+#' @description import data from SQL database using odbc connection
 #' @export
 
-load_sales_forecasts <- function(db_con = NULL,target_attribute = "*", item_IDs = NULL, store_IDs = NULL,as_of_date = NULL,sc_meta_data = NULL,date_freq = NULL,fcast_horizon = 14){
-  if(is.null(as_of_date))as_of_date <- Sys.Date()
-  fcast_horizon <- as.numeric(fcast_horizon)
+import_data_from_sql <- function(db_con = NULL,target_attribute = "*", item_IDs = NULL, store_IDs = NULL,as_of_date = NULL,sc_meta_data = NULL,date_freq = NULL,fcast_horizon = 14){
   query_statement <- paste0("SELECT ",target_attribute," FROM sales_forecast_table WHERE as_of_date ='",as.numeric(as_of_date),"'")
   sales_forecasts <- odbc::dbGetQuery(conn = db_con,statement = query_statement)
   if(is.null(item_IDs) | is.null(store_IDs))return(sales_forecasts)
@@ -23,6 +19,42 @@ load_sales_forecasts <- function(db_con = NULL,target_attribute = "*", item_IDs 
   date_vect   <- sales_forecasts%>%dplyr::pull(as_of_date)%>%lubridate::as_date(., origin = lubridate::origin) # convert date into the right format
   sales_forecasts  <- sales_forecasts%>%dplyr::mutate(as_of_date = date_vect)%>%
     head(fcast_horizon)
+  return(sales_forecasts)
+}
+
+#' load_sales_forecasts
+#' @param db_con a database connection
+#' @param item_IDs articles to load
+#' @param store_IDs store IDs
+#' @export
+
+load_sales_forecasts <- function(db_con = NULL,target_attribute = "*", item_IDs = NULL, store_IDs = NULL,as_of_date = NULL,sc_meta_data = NULL,date_freq = NULL,fcast_horizon = 14){
+  if(is.null(as_of_date))as_of_date <- Sys.Date()
+  fcast_horizon <- as.numeric(fcast_horizon)
+  db_type <- sc_meta_data[["db_type"]]
+  if(db_type %in% c("sqlite","mySQL","postgre")){
+  sales_forecast <- import_data_from_sql(db_con = db_con,target_attribute = target_attribute, item_IDs = item_IDs,
+                                         store_IDs = store_IDs,as_of_date = as_of_date,sc_meta_data = sc_meta_data,date_freq = date_freq
+                                         ,fcast_horizon = fcast_horizon)  
+  }
+  db_type <- "mongodb"
+  if(db_type == "mongodb"){
+    sc_meta_data[["mongodb_base_url"]]     <- "https://data.mongodb-api.com/app/data-qgigl/endpoint/data/"
+    sc_meta_data[["mongodb_key_name"]]     <- "MONGODB_API_KEY1"
+    sc_meta_data[["mongodb_db_name"]]      <- "DB_Full_byline"
+    mongo_db_api_key         <- Sys.getenv(sc_meta_data[["mongodb_key_name"]])
+    
+    target_table             <- "sales_forecast_table"
+    # target_filter            <- list(family = list("$in" =c("AUTOMOTIVE","BREAD/BAKERY")) )
+    target_filter <- mongodb_create_filter_query(sc_meta_data = sc_meta_data, item_IDs = item_IDs,
+                                                 store_IDs =  store_IDs)
+    sales_forecasts <- import_data_mongo_db(base_url = sc_meta_data[["mongodb_base_url"]],
+                                            mongo_db_api_key = mongo_db_api_key,
+                                            target_db = sc_meta_data[["mongodb_db_name"]],
+                                            target_table = target_table,
+                                            target_filter = target_filter)
+                        
+  }
   return(sales_forecasts)
 }
 
